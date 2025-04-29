@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="register-container">
+    <h1>Registrati</h1>
+    <form action="" method="post" class="register-form">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(size=32, class_="form-input") }}
+            {% for error in form.username.errors %}
+            <span class="error-text">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(size=64, class_="form-input") }}
+            {% for error in form.email.errors %}
+            <span class="error-text">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(size=32, class_="form-input") }}
+            {% for error in form.password.errors %}
+            <span class="error-text">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password2.label }}
+            {{ form.password2(size=32, class_="form-input") }}
+            {% for error in form.password2.errors %}
+            <span class="error-text">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class_="submit-btn") }}
+        </div>
+    </form>
+</div>
+
+<style>
+    .register-container {
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #4a5568;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 0.95em;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #4299e1;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background: #4299e1;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.2s;
+    }
+
+    .submit-btn:hover {
+        background: #3182ce;
+    }
+
+    .error-text {
+        color: #e53e3e;
+        font-size: 0.9em;
+        display: block;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}

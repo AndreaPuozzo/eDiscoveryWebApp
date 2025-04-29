@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="file-info-container">
+    <div class="navigation-links">
+        <a href="{{url_for('case_details', case_id=file.case_id)}}" class="back-link">← Torna al Caso</a>
+    </div>
+
+    <h1>Informazioni File</h1>
+    <p class="filename"><strong>Nome File: </strong> {{ info.filename.split('/')[-1] }} </p>
+
+    <section class="metadata-section">
+        <h2>Metadati</h2>
+        <ul class="metadata-list">
+            {% for label, value in info.metadata.items() %}
+            <li><strong>{{ label }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="annotations-section">
+        <h2>Annotazioni</h2>
+        <form action="{{url_for('add_file_annotation', file_id=file.id)}}" method="post" class="annotation-form">
+            <select name="label" required class="label-select">
+                <option value="">Seleziona la label</option>
+                <option value="Rilevante">Rilevante</option>
+                <option value="Non Rilevante">Non Rilevante</option>
+                <option value="Importante">Importante</option>
+                <option value="Review Necessaria">Review Necessaria</option>
+                <option value="Confidenziale">Confidenziale</option>
+            </select>
+            <input type="text" name="comment" placeholder="Aggiungi un commento (opzionale)" class="comment-input">
+            <button type="submit" class="add-btn">Aggiungi Commento</button>
+        </form>
+
+        <div class="annotations-list">
+            {% if file.annotations %}
+            {% for annotation in file.annotations %}
+            <div class="annotation-item">
+                <span class="label">{{ annotation.label }}</span>
+                {% if annotation.comment %}
+                <span class="comment">{{ annotation.comment }}</span>
+                {% endif %}
+                <div class="annotation-meta">
+                    <span class="metadata">da {{ annotation.user.username }} il {{ annotation.created_at.strftime('%d-%m-%Y %H:%M')}}</span>
+                    {% if current_user.id == annotation.created_by %}
+                    <form action="{{ url_for('delete_file_annotation', annotation_id=annotation.id) }}" method="post" class="delete-form">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Vuoi cancellare l\'annotazione?')">×</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="no-annotations">Nessuna annotazione presente.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="preview-section">
+        <h2>Preview:</h2>
+        <div class="preview-container">
+            {% for image in info.preview_images %}
+            <div class="preview-page">
+                <img src="{{ image }}" alt="Preview Image" class="preview-image">
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<style>
+    .file-info-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: #4299e1;
+        text-decoration: none;
+        margin-bottom: 30px;
+        font-weight: 500;
+    }
+
+    .filename {
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #2d3748;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .metadata-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .metadata-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .metadata-list li:last-child {
+        border-bottom: none;
+    }
+
+    .annotation-form {
+        display: grid;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .label-select, .comment-input {
+        padding: 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+    }
+
+    .add-btn {
+        background: #4299e1;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .annotation-item {
+        background: #f7fafc;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .annotation-item .label {
+        font-weight: 500;
+        color: #4299e1;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .annotation-item .comment {
+        display: block;
+        color: #4a5568;
+        margin-bottom: 10px;
+    }
+
+    .annotation-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9em;
+        color: #718096;
+    }
+
+    .delete-btn {
+        background: none;
+        border: none;
+        color: #e53e3e;
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 0 5px;
+    }
+
+    .preview-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .preview-page {
+        background: white;
+        padding: 20px;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+</style>
+{% endblock %}

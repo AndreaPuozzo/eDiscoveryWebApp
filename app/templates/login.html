@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <h1>Sign In</h1>
+    <form action="" method="post" novalidate class="login-form">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label }} 
+            {{ form.username(size=32, class_="form-input") }}
+            {% for error in form.username.errors %}
+            <span class="error-text">[{{error}}]</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(size=32, class_="form-input") }}
+            {% for error in form.password.errors %}
+            <span class="error-text">[{{error}}]</span>
+            {% endfor %}
+        </div>
+        <div class="form-group remember-me">
+            {{ form.remember_me() }}
+            {{ form.remember_me.label }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class_="submit-btn") }}
+        </div>
+    </form>
+    <p class="register-link">Nuovo Utente? <a href="{{ url_for('register') }}">Clicca per Registrarti!</a></p>
+</div>
+
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        margin-top: 5px;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background: #4299e1;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .submit-btn:hover {
+        background: #3182ce;
+    }
+
+    .error-text {
+        color: #e53e3e;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .register-link a {
+        color: #4299e1;
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

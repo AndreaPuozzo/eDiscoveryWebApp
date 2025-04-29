@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="welcome-container">
+    <div class="welcome-header">
+        <h1>Benvenuto {{current_user.username}}</h1>
+        <p class="subtitle">Scegli un'azione per iniziare</p>
+    </div>
+
+
+    <div class="actions-container">
+        <a href="{{url_for('create_case')}}" class="action-card">
+            <div class="action-content">
+                <div class="icon">📁</div>
+                <h2>Crea un Nuovo Caso</h2>
+                <p>Inizia un nuovo caso e-Discovery caricando i file necessari</p>
+            </div>
+        </a>
+
+        <a href="{{url_for('cases')}}" class="action-card">
+            <div class="action-content">
+                <div class="icon">📋</div>
+                <h2>Visualizza Tutti i Casi</h2>
+                <p>Accedi ai casi esistenti e gestisci le tue investigazioni</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    .welcome-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .welcome-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .welcome-header h1 {
+        color: #2d3748;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        color: #718096;
+        font-size: 1.2em;
+        margin-top: 0;
+    }
+
+    .actions-container {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .action-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-content {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+
+    .action-content h2 {
+        color: #2d3748;
+        margin: 0 0 10px 0;
+        font-size: 1.5em;
+    }
+
+    .action-content p {
+        color: #718096;
+        margin: 0;
+        line-height: 1.5;
+    }
+</style>
+
+
+{% endblock %}

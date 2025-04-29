@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="create-case-container">
+    <h1>Crea un Nuovo Caso</h1>
+    <form action="{{url_for('create_case')}}" method="post" enctype="multipart/form-data" class="create-case-form">
+        <div class="form-group">
+            <label for="case_name">Nome del Caso: </label>
+            <input type="text" name="case_name" id="case_name" class="form-input" required>
+        </div>
+        <div class="form-group">
+            <label for="directory">Seleziona una Directory: </label>
+            <input type="file" id="directory" name="file" webkitdirectory required class="file-input">
+            <input type="hidden" id="directory_path" name="directory_path">
+        </div>
+        <button type="submit" class="submit-btn">Crea Caso</button>
+    </form>
+</div>
+
+<style>
+    .create-case-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .create-case-form {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 1em;
+    }
+
+    .file-input {
+        width: 100%;
+        padding: 8px;
+        border: 2px dashed #e2e8f0;
+        border-radius: 6px;
+        background: #f7fafc;
+    }
+
+    .file-input:hover {
+        border-color: #4299e1;
+    }
+
+    .submit-btn {
+        padding: 12px;
+        background: #4299e1;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.2s;
+    }
+
+    .submit-btn:hover {
+        background: #3182ce;
+    }
+</style>
+
+<script>
+    document.getElementById('directory').addEventListener('change', function () {
+        const fullPath = this.files[0].webkitRelativePath;
+        const directory = fullPath.split('/')[0];
+        document.getElementById('directory_path').value = directory;
+    });
+</script>
+{% endblock %}

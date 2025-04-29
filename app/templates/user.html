@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="user-profile-container">
+    <div class="profile-card">
+        <h1>User: {{ user.username }}</h1>
+        {% if user.last_seen %}
+        <div class="last-seen">
+            <i class="time-icon">🕒</i>
+            <span>Last seen on: {{ user.last_seen }}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .user-profile-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .profile-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-card h1 {
+        color: #2d3748;
+        margin: 0 0 20px 0;
+        font-size: 2em;
+    }
+
+    .last-seen {
+        color: #718096;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.1em;
+    }
+
+    .time-icon {
+        font-size: 1.2em;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- I COMMENTI SOTTO SONO QUELLI DI JINJA!!!  -->
+
+    {# per tutti i conditional statements uso {% %} #}
+
+    {% if title %}
+
+    {# utilizzo dei placeholder {{}} che mi servono per rendere il contenuto dinamico #}
+    <!-- se inserisco nella funzione come input un titolo, viene inserito tramite il placeholder -->
+
+    <title>{{ title }} - e-Discovery</title>
+    {% else %}
+    <title>Welcome to e-Discovery</title>
+    {% endif %}
+</head>
+
+<body>
+    <div class="navbar">
+        <span class="brand">e-Discovery:</span>
+        <nav class="nav-links">
+            <a href="{{url_for('index')}}">Home</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{url_for('login')}}">Login</a>
+            {% else %}
+            <a href="{{ url_for('user', username=current_user.username) }}">Profilo</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+            {% if request.endpoint == 'file_info' %}
+            <form action="{{url_for('delete_file', file_id=file.id)}}" method="post" class="delete-form">
+                <button type="submit" class="delete-nav-btn" onclick="return confirm('Sei sicuro di voler eliminare questo file?')">
+                    Elimina File
+                </button>
+            </form>
+            {% endif %}
+            {% endif %}
+        </nav>
+    </div>
+    <hr>
+
+    <!-- get_flashed_messages è una funzione di flask che ritorna la lista di tutti i messaggi inviati con flash() -->
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{message}}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <!-- content è il nome del blocco in questione, non è una keyword fissa
+    serve al programma per capire a quale blocco riferirsi -->
+    {% block content %}
+    <!-- qua è da dove partono i template che derivano da questo "base"  -->
+    <!-- tutti hanno in comune quello che è presente in questo template + funzionalità aggiuntive! -->
+    {% endblock %}
+
+    <style>
+        .navbar {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .nav-links a:hover {
+            color: #4a90e2;
+        }
+
+        .delete-form {
+            margin: 0;
+            padding: 0;
+            display: inline;
+        }
+
+        .delete-nav-btn {
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+
+        .delete-nav-btn:hover {
+            background-color: #b91c1c;
+        }
+    </style>
+</body>
+
+</html>

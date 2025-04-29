@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="case-details-container">
+    <h1>Dettagli del Caso: {{case.name}}</h1>
+    <p class="creation-date">Creato il: {{case.created_at.strftime('%d-%m-%Y %H:%M:%S')}}</p>
+
+    <div class="upload-section">
+        <button onclick="toggleUploadForm()" class="toggle-btn">Aggiungi File</button>
+        <form action="{{url_for('add_files_to_case', case_id=case.id)}}" method="post" enctype="multipart/form-data" id="uploadForm" class="upload-form">
+            <input type="file" name="file" multiple required class="file-input">
+            <button type="submit" class="submit-btn">Carica</button>
+        </form>
+    </div>
+
+    <div class="search-container">
+        <form action="{{url_for('case_details', case_id=case.id)}}" method="get" class="search-form">
+            <div class="search-controls">
+                <select name="label_filter" class="label-filter">
+                    <option value="">Seleziona Label</option>
+                    <option value="unlabeled" {% if label_filter == 'unlabeled' %} selected {% endif %}>Non Etichettati</option>
+                    <option value="Rilevante" {% if label_filter == 'Rilevante' %} selected {% endif %}>Rilevante</option>
+                    <option value="Non Rilevante" {% if label_filter == 'Non Rilevante' %} selected {% endif %}>Non Rilevante</option>
+                    <option value="Importante" {% if label_filter == 'Importante' %} selected {% endif %}>Importante</option>
+                    <option value="Review Necessaria" {% if label_filter == 'Review Necessaria' %} selected {% endif %}>Review Necessaria</option>
+                    <option value="Confidenziale" {% if label_filter == 'Confidenziale' %} selected {% endif %}>Confidenziale</option>
+                </select>
+                <input type="text" name="comment_search" placeholder="Cerca nei commenti" value="{{comment_search if comment_search}}" class="comment-search">
+            </div>
+            <div class="button-group">
+                <button type="submit" class="search-btn">Cerca</button>
+                {% if label_filter or comment_search %}
+                <a href="{{url_for('case_details', case_id=case.id)}}" class="reset-btn">Reset</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <div class="files-list">
+        {% if files %}
+        {% for file in files%}
+        <div class="file-item">
+            <div class="file-name">{{file.filename.split('/')[-1]}}</div>
+            <a href="{{url_for('file_info', file_id=file.id)}}" class="view-details">Guarda i Dettagli</a>
+
+            {% if label_filter or comment_search %}
+            <div class="matching-annotations">
+                {% for annotation in file.annotations %}
+                {% if (label_filter and annotation.label == label_filter) or (comment_search and annotation.comment and comment_search.lower() in annotation.comment.lower()) %}
+                <div class="annotation-preview">
+                    <span class="label">{{annotation.label}}</span>
+                    {% if annotation.comment %}
+                    <span class="comment">{{ annotation.comment }}</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-files">
+            {% if label_filter or comment_search %}
+            <p>Nessun file trovato con le annotazioni cercate</p>
+            {% else %}
+            <p>Nessun file presente in questo caso</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .case-details-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .creation-date {
+        text-align: center;
+        color: #718096;
+        margin-bottom: 30px;
+    }
+
+    .upload-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .toggle-btn {
+        background: #4299e1;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .upload-form {
+        margin-top: 15px;
+        display: none;
+    }
+
+    .search-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .search-controls {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .label-filter, .comment-search {
+        padding: 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+    }
+
+    .label-filter {
+        min-width: 200px;
+    }
+
+    .comment-search {
+        flex-grow: 1;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-btn, .reset-btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .search-btn {
+        background: #4299e1;
+        color: white;
+        border: none;
+    }
+
+    .reset-btn {
+        background: #edf2f7;
+        color: #4a5568;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .files-list {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .file-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .file-item:last-child {
+        border-bottom: none;
+    }
+
+    .file-name {
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .view-details {
+        color: #4299e1;
+        text-decoration: none;
+        font-size: 0.9em;
+    }
+
+    .matching-annotations {
+        margin-top: 10px;
+        padding-left: 15px;
+        border-left: 3px solid #4299e1;
+    }
+
+    .annotation-preview {
+        margin: 5px 0;
+        font-size: 0.9em;
+    }
+
+    .annotation-preview .label {
+        font-weight: 500;
+        color: #4299e1;
+        margin-right: 10px;
+    }
+
+    .annotation-preview .comment {
+        color: #718096;
+    }
+
+    .no-files {
+        padding: 30px;
+        text-align: center;
+        color: #718096;
+    }
+</style>
+
+<script>
+    function toggleUploadForm() {
+        const form = document.getElementById('uploadForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

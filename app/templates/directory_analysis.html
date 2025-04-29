@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Analisi della Directory</h1>
+<ul>
+    {% for file in files %}
+    <li>
+        <strong>{{file.filename}}</strong> <br>
+        <a href="{{url_for('file_info', filename=file.filename|basename)}}">Guarda i dettagli</a>
+    </li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}
