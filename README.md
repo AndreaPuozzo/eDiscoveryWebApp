@@ -42,7 +42,7 @@ Questo progetto è stato presentato come tesi triennale in **Sicurezza dei Siste
 **Titolo:** *Progettazione e implementazione di un’interfaccia web per la consultazione di evidenze informatiche per finalità di e-Discovery*  
 **Anno accademico:** 2023/2024
 
-📄 [Clicca qui per leggere la tesi completa (PDF)](link)
+📄 [Clicca qui per leggere la tesi completa (PDF)](./tesi.pdf)
 
 ## Autore
 
